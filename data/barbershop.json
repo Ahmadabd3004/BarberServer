@@ -1,0 +1,9 @@
+[
+    {
+        "namaBarberShop":"Asgar",
+        "alamat": "JL. Buntu",
+        "userId": 3,
+        "kuotaPerjam":2,
+        "isActive":true
+    }
+]

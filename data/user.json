@@ -1,0 +1,11 @@
+[
+    {   
+        "name":"admin",
+        "email": "admin@mail.com",
+        "username": "admincuy",
+        "password" : "12345",
+        "gender": "L",
+        "isActive":true,
+        "isOwner":false
+    }
+]
