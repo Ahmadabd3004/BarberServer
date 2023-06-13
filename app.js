@@ -6,6 +6,7 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static("uploads"));
 
 const user = require("./routes/user");
 const store = require("./routes/store");
