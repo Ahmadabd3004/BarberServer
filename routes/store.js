@@ -48,6 +48,9 @@ router.post(
   Controller.createPhotoBarber
 );
 
+router.post("/barbershop/booking", Controller.bookingBarber);
+router.put("/barbershop/booking", Controller.bookingUpdate);
+
 // //joining path of directory
 // const directoryPath = path.join(appDir + "/uploads");
 // //passsing directoryPath and callback function

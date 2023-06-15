@@ -6,6 +6,8 @@ const {
   Kapster,
   Jadwal,
   PhotoBarber,
+  BookingHeader,
+  BookingDetail,
 } = require("../models");
 const { dirname } = require("path");
 
@@ -169,6 +171,7 @@ class Controller {
     }
   }
 
+  //Jadwal
   static async getJadwalBarber(req, res) {
     try {
       const { barberId } = req.body;
@@ -220,6 +223,41 @@ class Controller {
     }
   }
 
+  //Booking
+
+  static async bookingBarber(req, res) {
+    try {
+      const { barberId, userId, jamBooking, urutan } = req.body;
+      const booking = await BookingHeader.create({
+        barberId,
+        userId,
+        isActive: true,
+      });
+      const bookingDt = await BookingDetail.create({
+        bookingId: booking.id,
+        status: 0,
+        jamBooking,
+        urutan,
+      });
+      res.status(201).json({ bookingDt });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  static async bookingUpdate(req, res) {
+    const { bookingId, status } = req.body;
+    const bookingDt2 = await BookingDetail.findByPk(bookingId);
+    if (!bookingDt2) {
+      throw { message: "Booking not found!" };
+    }
+    bookingDt2.update({ status }, { where: { id: bookingId } });
+    res.status(200).json({ bookingDt2 });
+    try {
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
   // static async createKapster(req, res) {
   //   try {
   //   } catch (error) {
