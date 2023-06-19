@@ -22,6 +22,15 @@ class Controller {
       res.status(500).json({ message: "Error!" });
     }
   }
+  static async barberGetDetailData(req, res) {
+    try {
+      const { id } = req.params;
+      const barber = await BarberShop.findAll({ where: { id } });
+      res.status(200).json(barber);
+    } catch (error) {
+      res.status(500).json({ message: "Error!" });
+    }
+  }
   static async barberCreate(req, res) {
     try {
       let { namaBarberShop, alamat, userId, kuotaPerjam, isActive } = req.body;
@@ -77,8 +86,8 @@ class Controller {
 
   static async barberGetReviews(req, res) {
     try {
-      const { barberId } = req.body;
-      const reviews = await Review.findAll({ where: { barberId } });
+      const { id } = req.params;
+      const reviews = await Review.findAll({ where: { barberId: id } });
       res.status(200).json(reviews);
     } catch (error) {
       res.status(500).json(error);
@@ -99,8 +108,8 @@ class Controller {
 
   static async barberGetLayanan(req, res) {
     try {
-      const { barberId } = req.body;
-      const layanan = await Layanan.findAll({ where: { barberId } });
+      const { id } = req.params;
+      const layanan = await Layanan.findAll({ where: { id } });
       res.status(200).json(layanan);
     } catch (error) {
       res.status(500).json(error);
@@ -125,8 +134,8 @@ class Controller {
 
   static async getKapster(req, res) {
     try {
-      const { barberId } = req.body;
-      const kapster = await Kapster.findAll({ where: { barberId } });
+      const { id } = req.params;
+      const kapster = await Kapster.findAll({ where: { barberId:id } });
       res.status(200).json(kapster);
     } catch (error) {
       res.status(500).json(error);
@@ -174,8 +183,8 @@ class Controller {
   //Jadwal
   static async getJadwalBarber(req, res) {
     try {
-      const { barberId } = req.body;
-      const jadwal = await Jadwal.findAll({ where: { barberId } });
+      const { id } = req.params;
+      const jadwal = await Jadwal.findAll({ where: { barberId: id } });
       res.status(200).json({ jadwal });
     } catch (error) {
       res.status(500).json(error);
@@ -193,10 +202,19 @@ class Controller {
       await Jadwal.bulkCreate(newJadwal);
       res.status(200).json({ newJadwal });
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({message: error});
     }
   }
 
+  static async getPhotoBarber(req, res) {
+    try {
+      const { id } = req.params;
+      const photos = await PhotoBarber.findAll({ where: { barberId: id } });
+      res.status(200).json({ photos });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
   static async createPhotoBarber(req, res) {
     try {
       const { barberId } = req.body;

@@ -17,17 +17,18 @@ const storage = multer.diskStorage({
 const uploads = multer({ storage: storage });
 
 router.get("/barbershop", Controller.barberGetAllData);
+router.get("/barbershop/:id", Controller.barberGetDetailData);
 router.post("/barbershop", Controller.barberCreate);
 router.put("/barbershop", Controller.barberUpdate);
 router.delete("/barbershop", Controller.barberDelete);
 
-router.get("/barbershop/reviews", Controller.barberGetReviews);
+router.get("/barbershop/:id/reviews", Controller.barberGetReviews);
 router.post("/barbershop/reviews", Controller.barberCreateReviews);
 
-router.get("/barbershop/layanan", Controller.barberGetLayanan);
+router.get("/barbershop/:id/layanan", Controller.barberGetLayanan);
 router.post("/barbershop/layanan", Controller.barberCreateLayanan);
 
-router.get("/barbershop/kapster", Controller.getKapster);
+router.get("/barbershop/:id/kapster", Controller.getKapster);
 router.post(
   "/barbershop/kapster",
   uploads.single("files"),
@@ -39,9 +40,10 @@ router.put(
   Controller.updateKapster
 );
 
-router.get("/barbershop/jadwal", Controller.getJadwalBarber);
-router.post("/barbershop/jadwal", Controller.getJadwalBarber);
+router.get("/barbershop/:id/jadwal", Controller.getJadwalBarber);
+router.post("/barbershop/jadwal", Controller.createJadwalBarber);
 
+router.get("/barbershop/:id/photo-barber", Controller.getPhotoBarber);
 router.post(
   "/barbershop/photoBarber",
   uploads.array("files"),
