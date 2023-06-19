@@ -184,6 +184,7 @@ class Controller {
   static async createJadwalBarber(req, res) {
     try {
       const { jadwal, barberId } = req.body;
+      console.log(jadwal);
       const newJadwal = jadwal.map((e) => {
         return {
           jamOperasional: e,

@@ -40,7 +40,7 @@ router.put(
 );
 
 router.get("/barbershop/jadwal", Controller.getJadwalBarber);
-router.post("/barbershop/jadwal", Controller.getJadwalBarber);
+router.post("/barbershop/jadwal", Controller.createJadwalBarber);
 
 router.post(
   "/barbershop/photoBarber",
