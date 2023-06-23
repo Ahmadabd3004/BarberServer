@@ -33,7 +33,16 @@ class Controller {
   static async barberGetDetailData(req, res) {
     try {
       const { id } = req.params;
-      const barber = await BarberShop.findAll({ where: { id } });
+      const barber = await BarberShop.findAll(
+        {
+          include: [
+            {
+              model: PhotoBarber,
+            },
+          ],
+        },
+        { where: { id } }
+      );
       res.status(200).json(barber);
     } catch (error) {
       res.status(500).json({ message: "Error!" });
