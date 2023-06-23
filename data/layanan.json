@@ -3,21 +3,21 @@
         "namaLayanan":"Cukur normal",
         "harga":20000,
         "deskripsi":"Cukuran untuk manusia normal",
-        "barberId":2,
+        "barberId":1,
         "isActive":true
     },
     {
         "namaLayanan":"Cukur medium",
         "harga":30000,
         "deskripsi":"Cukuran untuk manusia normal",
-        "barberId":3,
+        "barberId":1,
         "isActive":true
     },
     {
         "namaLayanan":"Cukur normal",
         "harga":40000,
         "deskripsi":"Cukuran untuk manusia normal",
-        "barberId":3,
+        "barberId":1,
         "isActive":true
     }
 ]

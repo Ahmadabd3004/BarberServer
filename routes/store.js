@@ -49,7 +49,8 @@ router.post(
   uploads.array("files"),
   Controller.createPhotoBarber
 );
-
+router.get("/barbershop/:userId/userBooking", Controller.getBookingByUser);
+router.get("/barbershop/:id/booking", Controller.getBookingByBarber);
 router.post("/barbershop/booking", Controller.bookingBarber);
 router.put("/barbershop/booking", Controller.bookingUpdate);
 

@@ -2,8 +2,10 @@
     {
         "namaBarberShop":"Asgar",
         "alamat": "JL. Buntu",
+        "deskripsi":"Barber asal garuk",
         "userId": 1,
         "kuotaPerjam":2,
+        "rating":0,
         "isActive":true
     }
 ]

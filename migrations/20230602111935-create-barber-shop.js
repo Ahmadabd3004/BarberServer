@@ -13,6 +13,9 @@ module.exports = {
       namaBarberShop: {
         type: Sequelize.STRING,
       },
+      deskripsi: {
+        type: Sequelize.STRING,
+      },
       alamat: {
         type: Sequelize.STRING,
       },
@@ -27,6 +30,9 @@ module.exports = {
       },
       kuotaPerjam: {
         type: Sequelize.INTEGER,
+      },
+      rating: {
+        type: Sequelize.FLOAT,
       },
       isActive: {
         type: Sequelize.BOOLEAN,

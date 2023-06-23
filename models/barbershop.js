@@ -9,14 +9,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      BarberShop.hasMany(models.PhotoBarber, {
+        foreignKey: "barberId",
+      });
     }
   }
   BarberShop.init(
     {
       namaBarberShop: DataTypes.STRING,
+      deskripsi: DataTypes.STRING,
       alamat: DataTypes.STRING,
       userId: DataTypes.INTEGER,
       kuotaPerjam: DataTypes.INTEGER,
+      rating: DataTypes.FLOAT,
       isActive: DataTypes.BOOLEAN,
     },
     {

@@ -9,6 +9,7 @@ class Controller {
         name,
         email,
         username,
+        photo: "default.jpg",
         password: hashPassword(password),
         gender,
         isActive,
@@ -78,6 +79,20 @@ class Controller {
       res.status(200).json(user);
     } catch (error) {
       res.status(400).json(error);
+    }
+  }
+  static async uploadPhoto(req, res) {
+    try {
+      const { userId } = req.body;
+      const kapster = await User.update(
+        {
+          photo: req.file.filename,
+        },
+        { where: { id: userId } }
+      );
+      res.status(200).json({ kapster });
+    } catch (error) {
+      res.status(500).json(error);
     }
   }
 }
