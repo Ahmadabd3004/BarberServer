@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       BarberShop.hasMany(models.PhotoBarber, {
         foreignKey: "barberId",
       });
+      BarberShop.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
     }
   }
   BarberShop.init(

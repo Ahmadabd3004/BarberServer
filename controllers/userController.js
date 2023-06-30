@@ -23,8 +23,17 @@ class Controller {
   static async userLogin(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ where: { email } });
-
+      const user = await User.findOne(
+        {
+          include: [
+            {
+              model: BarberShop,
+              attributes: ["id"],
+            },
+          ],
+        },
+        { where: { email } }
+      );
       if (!user) {
         throw { message: "Wrong Username/Password!" };
       }
@@ -36,7 +45,12 @@ class Controller {
         id: user.id,
       };
       const access_token = createToken(payload);
-      res.status(200).json({ access_token, userId: user.id });
+      res.status(200).json({
+        access_token,
+        id: user.id,
+        isOwner: user.isOwner,
+        BarberShop: user.BarberShops,
+      });
     } catch (error) {
       res.status(400).json(error);
     }
