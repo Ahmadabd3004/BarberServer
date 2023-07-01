@@ -26,6 +26,7 @@ router.get("/barbershop/:id/reviews", Controller.barberGetReviews);
 router.post("/barbershop/reviews", Controller.barberCreateReviews);
 
 router.get("/barbershop/:id/layanan", Controller.barberGetLayanan);
+router.get("/barbershop/:id/statistik", Controller.barberGetStatistic);
 router.post("/barbershop/layanan", Controller.barberCreateLayanan);
 
 router.get("/barbershop/:id/kapster", Controller.getKapster);
@@ -53,22 +54,5 @@ router.get("/barbershop/:userId/userBooking", Controller.getBookingByUser);
 router.get("/barbershop/:id/booking", Controller.getBookingByBarber);
 router.post("/barbershop/booking", Controller.bookingBarber);
 router.put("/barbershop/booking", Controller.bookingUpdate);
-
-// //joining path of directory
-// const directoryPath = path.join(appDir + "/uploads");
-// //passsing directoryPath and callback function
-// fs.readdir(directoryPath, function (err, files) {
-//   //handling error
-//   if (err) {
-//     return console.log("Unable to scan directory: " + err);
-//   }
-//   //listing all files using forEach
-//   files.forEach(function (file) {
-//     // Do whatever you want to do with the file
-//     console.log(file);
-//   });
-// });
-
-// router.get("/barbershop/kapster", (req, res) => {});
 
 module.exports = router;

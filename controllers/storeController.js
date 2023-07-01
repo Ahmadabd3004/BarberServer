@@ -10,6 +10,10 @@ const {
   BookingDetail,
 } = require("../models");
 const { dirname } = require("path");
+const { Op } = require("sequelize");
+const moment = require("moment");
+const TODAY_START = moment().format("YYYY-MM-DD 00:00");
+const NOW = moment().format("YYYY-MM-DD 23:59");
 
 class Controller {
   // Data Barber
@@ -219,7 +223,10 @@ class Controller {
   static async getJadwalBarber(req, res) {
     try {
       const { id } = req.params;
-      const jadwals = await Jadwal.findAll({ where: { barberId: id } });
+      const { tanggalBooking } = req.body;
+      const jadwals = await Jadwal.findAll({
+        where: { barberId: id, tanggalBooking },
+      });
 
       res.status(200).json({ jadwals });
     } catch (error) {
@@ -228,13 +235,14 @@ class Controller {
   }
   static async createJadwalBarber(req, res) {
     try {
-      const { jadwal, barberId } = req.body;
+      const { jadwal, barberId, tanggalBooking } = req.body;
       // console.log(jadwal);
       const newJadwal = jadwal.map((e) => {
         return {
           jamOperasional: e,
           barberId,
           isAvailable: true,
+          tanggalBooking,
         };
       });
       await Jadwal.bulkCreate(newJadwal);
@@ -289,6 +297,12 @@ class Controller {
             {
               model: BookingDetail,
             },
+            {
+              model: BarberShop,
+              include: {
+                model: User,
+              },
+            },
           ],
         },
         {
@@ -306,9 +320,17 @@ class Controller {
       const { userId } = req.params;
       const bookingData = await BookingHeader.findAll({
         where: { userId },
-        include: {
-          model: BookingDetail,
-        },
+        include: [
+          {
+            model: BookingDetail,
+          },
+          {
+            model: BarberShop,
+            include: {
+              model: User,
+            },
+          },
+        ],
       });
       res.status(200).json({ bookingData });
     } catch (error) {
@@ -317,25 +339,21 @@ class Controller {
   }
   static async bookingBarber(req, res) {
     try {
-      const { barberId, userId, jamBooking } = req.body;
+      const { barberId, userId, jamBooking, tanggalBooking } = req.body;
       const barber = await BarberShop.findByPk(barberId);
       if (!barber) {
         throw { message: "Barber not found!" };
       }
 
-      const isBooked = await BookingHeader.findAll(
-        {
-          where: { barberId, userId },
-        },
-        {
-          include: [
-            {
-              model: BookingDetail,
-              where: { jamBooking },
-            },
-          ],
-        }
-      );
+      const isBooked = await BookingHeader.findAll({
+        include: [
+          {
+            model: BookingDetail,
+            where: { jamBooking, tanggalBooking },
+          },
+        ],
+        where: { barberId, userId },
+      });
       if (isBooked.length) {
         res.status(200).json({
           msg: "Sudah pernah booking!",
@@ -343,24 +361,23 @@ class Controller {
       } else {
         const kuotaPerjam = barber.kuotaPerjam;
         // console.log("error disini");
-        const totalBooking = await BookingDetail.findAll(
-          {
-            include: [
-              {
-                model: BookingHeader,
-                where: { barberId },
-              },
-            ],
-          },
-          {
-            where: { jamBooking },
-          }
-        );
+        const totalBooking = await BookingDetail.findAll({
+          include: [
+            {
+              model: BookingHeader,
+              where: { barberId },
+            },
+          ],
+          where: { jamBooking, tanggalBooking },
+        });
+        // console.log(totalBooking);
+        // res.send(totalBooking);
         if (totalBooking.length < kuotaPerjam) {
           const bookingDt = await BookingDetail.create({
             status: 0,
             jamBooking,
             urutan: totalBooking.length + 1,
+            tanggalBooking,
           });
           await BookingHeader.create({
             barberId,
@@ -378,13 +395,15 @@ class Controller {
               ],
             },
             {
-              where: { jamBooking },
+              where: { jamBooking, tanggalBooking },
             }
           );
           if (currentTotalBooking.length == kuotaPerjam) {
             await Jadwal.update(
               { isAvailable: false },
-              { where: { jamOperasional: jamBooking, barberId } }
+              {
+                where: { jamOperasional: jamBooking, barberId, tanggalBooking },
+              }
             );
           }
           res.status(201).json({ bookingDt });
@@ -412,6 +431,49 @@ class Controller {
       res.status(500).json(error);
     }
   }
+
+  //Statistik
+  static async barberGetStatistic(req, res) {
+    try {
+      const { id } = req.params;
+      const photoBarber = await PhotoBarber.findAll({
+        where: { barberId: id },
+      });
+      const barber = await BarberShop.findByPk(id);
+      const totalBookingToday = await BookingDetail.findAll({
+        include: [
+          {
+            model: BookingHeader,
+            attributes: ["barberId"],
+            where: { barberId: id },
+          },
+        ],
+        where: {
+          tanggalBooking: {
+            [Op.between]: [TODAY_START, NOW],
+          },
+        },
+      });
+      const totalBookingWaitingListToday = await BookingDetail.findAll({
+        where: {
+          tanggalBooking: {
+            [Op.between]: [TODAY_START, NOW],
+          },
+          status: 0,
+        },
+      });
+      // console.log(date);
+      res.status(200).json({
+        photoBarber,
+        totalBookingToday: totalBookingToday.length,
+        totalBookingWaitingListToday: totalBookingWaitingListToday.length,
+        rating: barber.rating,
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
   // static async createKapster(req, res) {
   //   try {
   //   } catch (error) {

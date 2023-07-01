@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       jamOperasional: DataTypes.STRING,
       barberId: DataTypes.INTEGER,
       isAvailable: DataTypes.BOOLEAN,
+      tanggalBooking: {
+        type: DataTypes.DATE,
+      },
     },
     {
       sequelize,

@@ -19,6 +19,9 @@ module.exports = {
       urutan: {
         type: Sequelize.INTEGER,
       },
+      tanggalBooking: {
+        type: Sequelize.DATE,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

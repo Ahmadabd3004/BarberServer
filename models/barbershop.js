@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       BarberShop.hasMany(models.PhotoBarber, {
         foreignKey: "barberId",
       });
+      BarberShop.hasMany(models.BookingHeader, {
+        foreignKey: "barberId",
+      });
       BarberShop.belongsTo(models.User, {
         foreignKey: "userId",
       });
