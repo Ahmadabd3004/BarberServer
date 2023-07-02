@@ -13,8 +13,14 @@ module.exports = {
       status: {
         type: Sequelize.INTEGER,
       },
-      jamBooking: {
-        type: Sequelize.STRING,
+      jadwalId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Jadwals",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       urutan: {
         type: Sequelize.INTEGER,

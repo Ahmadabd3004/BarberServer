@@ -21,13 +21,6 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-      isAvailable: {
-        type: Sequelize.BOOLEAN,
-      },
-      tanggalBooking: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

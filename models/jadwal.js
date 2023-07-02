@@ -9,16 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Jadwal.hasMany(models.BookingDetail, {
+        foreignKey: "jadwalId",
+      });
     }
   }
   Jadwal.init(
     {
       jamOperasional: DataTypes.STRING,
       barberId: DataTypes.INTEGER,
-      isAvailable: DataTypes.BOOLEAN,
-      tanggalBooking: {
-        type: DataTypes.DATE,
-      },
     },
     {
       sequelize,
