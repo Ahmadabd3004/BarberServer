@@ -52,6 +52,7 @@ router.post(
 );
 router.get("/barbershop/:userId/userBooking", Controller.getBookingByUser);
 router.get("/barbershop/:id/booking", Controller.getBookingByBarber);
+router.get("/barbershop/:id/bookingDetail", Controller.getBookingDetail);
 router.post("/barbershop/booking", Controller.bookingBarber);
 router.put("/barbershop/booking", Controller.bookingUpdate);
 

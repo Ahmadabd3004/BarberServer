@@ -37,16 +37,14 @@ class Controller {
   static async barberGetDetailData(req, res) {
     try {
       const { id } = req.params;
-      const barber = await BarberShop.findAll(
-        {
-          include: [
-            {
-              model: PhotoBarber,
-            },
-          ],
-        },
-        { where: { id } }
-      );
+      const barber = await BarberShop.findOne({
+        where: { id },
+        include: [
+          {
+            model: PhotoBarber,
+          },
+        ],
+      });
       res.status(200).json(barber);
     } catch (error) {
       res.status(500).json({ message: "Error!" });
@@ -223,12 +221,17 @@ class Controller {
   static async getJadwalBarber(req, res) {
     try {
       const { id } = req.params;
+      console.log(TODAY_START, NOW);
       const { tanggalBooking } = req.body;
       const jadwals = await Jadwal.findAll({
         include: [
           {
             model: BookingDetail,
-            where: { tanggalBooking },
+            where: {
+              tanggalBooking: {
+                [Op.between]: [TODAY_START, NOW],
+              },
+            },
             required: false,
           },
         ],
@@ -304,31 +307,32 @@ class Controller {
   static async getBookingByBarber(req, res) {
     try {
       const { id } = req.params;
-      const bookingData = await BookingHeader.findAll(
-        {
-          include: [
-            {
-              model: BookingDetail,
+      const bookingData = await BookingHeader.findAll({
+        include: [
+          {
+            model: BookingDetail,
+            attributes: ["tanggalBooking"],
+            include: {
+              model: Jadwal,
+              attributes: ["jamOperasional"],
             },
-            {
-              model: BarberShop,
-              include: {
-                model: User,
-              },
+          },
+          {
+            model: BarberShop,
+            attributes: ["namaBarberShop"],
+            include: {
+              model: User,
             },
-          ],
-        },
-        {
-          where: { barberId: id },
-        }
-      );
+          },
+        ],
+        where: { barberId: id },
+      });
       res.status(200).json({ bookingData });
     } catch (error) {
       res.status(500).json(error);
     }
   }
   static async getBookingByUser(req, res) {
-    console.log("masuk sini");
     try {
       const { userId } = req.params;
       const bookingData = await BookingHeader.findAll({
@@ -336,9 +340,15 @@ class Controller {
         include: [
           {
             model: BookingDetail,
+            attributes: ["tanggalBooking"],
+            include: {
+              model: Jadwal,
+              attributes: ["jamOperasional"],
+            },
           },
           {
             model: BarberShop,
+            attributes: ["namaBarberShop"],
             include: {
               model: User,
             },
@@ -348,6 +358,35 @@ class Controller {
       res.status(200).json({ bookingData });
     } catch (error) {
       res.status(500).json(error);
+    }
+  }
+
+  static async getBookingDetail(req, res) {
+    try {
+      const { id } = req.params;
+      const booking = await BookingHeader.findOne({
+        include: [
+          {
+            model: BookingDetail,
+            include: {
+              model: Jadwal,
+            },
+          },
+          {
+            model: User,
+          },
+          {
+            model: BarberShop,
+          },
+        ],
+        where: { bookingId: id },
+      });
+      if (!booking) {
+        throw { message: "Data not found!" };
+      }
+      res.status(200).json(booking);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   }
   static async bookingBarber(req, res) {

@@ -17,5 +17,6 @@ router.post("/login", Controller.userLogin);
 router.post("/user/photo", uploads.single("files"), Controller.uploadPhoto);
 router.put("/userUpdate", Controller.userUpdate);
 router.delete("/userDelete", Controller.userDelete);
+router.get("/user/:id", Controller.userDetail);
 
 module.exports = router;
